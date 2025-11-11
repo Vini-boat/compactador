@@ -1,0 +1,41 @@
+- [X] fifo thread-safe
+- [ ] struct compartilhado (stats)
+    - mutex entre processos é diferente
+- [ ] pipe entre processos
+- [ ] main instânciar os 3 processos
+- [ ] argumentos do main
+- [ ] definir opções
+- [ ] processar elas
+- [ ] apresentação dos dados (Monitor)
+    - ler dos stats compartilhados
+- [ ] algoritmo de tokenização (thread de leitura)
+    - ter um tamanho máximo de bytes por token (uns 100)
+    - ter a lista de terminadores (pontuação ou espaço)
+    - copiar até a próxima pontuação ou espaço
+    - enviar o token da palavra
+    - enviar o token da pontuação ou espaço
+- [ ] algoritmo de compactação aprimorado
+    - se o token é um token novo
+        - armazena o token e define o byte dele
+    - seleciona o byte do token
+    - se em modo de benchmark
+        - envia a nova entrada o novo token para o descompactador 
+        - envia o byte para o descompactador
+    - se não 
+        - envia o byte para o gravador (thread de gravação)
+    - no final
+        - grava o dicionário no arquivo compactado
+- [ ] descompactador aprimorado
+- [ ] lendo arquivo
+    - le o dicionário do arquivo
+    - até o final do arquivo
+    - le o próximo byte
+    - converte o byte em token usando o dicionário
+    - envia para o gravador
+- [ ] recebendo do descompactador
+    - até receber o final do arquivo
+    - recebe a nova entrada do dicionário
+    - adiciona a entrada ao dicionário
+    - recebe o byte
+    - converte o byte em token
+    - envia o token para o gravador
