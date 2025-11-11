@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "structures/fifo.h"
+#include "structures/fifo_thread_safe.h"
 
 //int main(int argc, char *argv[]) {
 int main() {

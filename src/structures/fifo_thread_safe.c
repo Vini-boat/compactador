@@ -1,7 +1,7 @@
 #ifndef FIFO_C
 #define FIFO_C
 
-#include "structures/fifo.h"
+#include "structures/fifo_thread_safe.h"
 #include <pthread.h>
 
 void fifo_init(fifo_t *fifo){
