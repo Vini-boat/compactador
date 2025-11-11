@@ -3,9 +3,9 @@
     - mutex entre processos é diferente
 - [ ] pipe entre processos
 - [ ] main instânciar os 3 processos
-- [ ] argumentos do main
-- [ ] definir opções
-- [ ] processar elas
+- [X] argumentos do main
+    - [X] definir opções
+    - [ ] processar elas
 - [ ] apresentação dos dados (Monitor)
     - ler dos stats compartilhados
 - [ ] algoritmo de tokenização (thread de leitura)
