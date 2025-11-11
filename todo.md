@@ -2,7 +2,7 @@
 - [ ] struct compartilhado (stats)
     - mutex entre processos é diferente
 - [ ] pipe entre processos
-- [ ] main instânciar os 3 processos
+- [X] main instânciar os 3 processos
 - [X] argumentos do main
     - [X] definir opções
     - [ ] processar elas
