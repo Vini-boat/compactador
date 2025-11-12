@@ -23,6 +23,8 @@
     - [X] Separar os espaços e pontuação
     - [X] Aceitar acentos
 - [ ] algoritmo de compactação aprimorado
+    - [ ] quantidade do mesmo token
+      - o primeiro indice do dicionario é o byte que diz quantas vezes o token anterior vai se repetir
     - se o token é um token novo
         - armazena o token e define o byte dele
     - seleciona o byte do token
