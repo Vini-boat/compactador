@@ -5,6 +5,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 
 reader_thread_args_t* reader_thread_args_create(const char* filename, fifo_t* fifo_to_write){
     reader_thread_args_t *args = (reader_thread_args_t*) malloc(sizeof(reader_thread_args_t));
@@ -31,12 +33,46 @@ void* run_reader_thread(void *reader_thread_args){
 
     FILE *file = fopen(args->filename, "r");
 
-    char token[FIFO_MAX_WORD_LENGTH];
 
     // TODO: ajustar o algoritmo de tokenização
-    while(fscanf(file, "%s", token) == 1){
-        fifo_push(args->fifo_to_write, token);
-    }
+    // while(fscanf(file, "%s", token) == 1){
+    //     fifo_push(args->fifo_to_write, token);
+    // }
+
+    char token[FIFO_MAX_WORD_LENGTH];
+    int token_index = 0;
+    int c;
+
+    do {
+        c = fgetc(file);
+        if (isalnum(c)){
+            // Palavra Muito grande
+            if(token_index == FIFO_MAX_WORD_LENGTH -1){
+                token[token_index] = '\0';
+                fifo_push(args->fifo_to_write, token);
+                token_index = 0;
+            }
+
+            token[token_index++] = (char)c;
+            continue;
+        }
+
+        if (isspace(c) || ispunct(c) || c == EOF){
+            if(token_index > 0){
+                token[token_index] = '\0';
+                fifo_push(args->fifo_to_write, token);
+                token_index = 0;
+            }
+            if (c == EOF) continue;
+            
+            token_index = 0;
+            token[token_index++] = (char)c;
+            token[token_index] = '\0';
+            fifo_push(args->fifo_to_write, token);
+            token_index = 0;
+        }
+
+    } while (c != EOF);
 
     fclose(file);
     fifo_push(args->fifo_to_write, FIFO_FINAL_TOKEN);
