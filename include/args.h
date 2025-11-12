@@ -15,6 +15,8 @@ void args_print_usage(const char *prog_name);
 
 void args_exit_if_mode_already_set(args_t *args, const char *prog_name);
 
+void args_exit_if_file_dont_exists(char *filename);
+
 void args_parse_params(int argc,char *argv[], args_t *args);
 
 

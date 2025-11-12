@@ -27,6 +27,13 @@ void args_exit_if_mode_already_set(args_t *args, const char *prog_name){
     }
 }
 
+void args_exit_if_file_dont_exists(char *filename){
+    if(access(filename, F_OK) != 0){
+        fprintf(stderr, "Arquivo: %s não está acessível\n", filename);
+        exit(1);
+    }
+}
+
 void args_parse_params(int argc,char *argv[], args_t *args){
     int opt;
     char *prog_name = argv[0];
@@ -49,24 +56,28 @@ void args_parse_params(int argc,char *argv[], args_t *args){
             case 'c':
                 args_exit_if_mode_already_set(args, prog_name);
                 args->mode = 'c';
+                args_exit_if_file_dont_exists(optarg);
                 args->to_compress_filename = optarg;
                 break;
                 
             case 'd':
                 args_exit_if_mode_already_set(args, prog_name);
                 args->mode = 'd';
+                args_exit_if_file_dont_exists(optarg);
                 args->to_decompress_filename = optarg;
                 break;
-            
+                
             case 't':
                 args_exit_if_mode_already_set(args, prog_name);
                 args->mode = 't';
+                args_exit_if_file_dont_exists(optarg);
                 args->to_compress_filename = optarg;
                 break;
         
             case 'b':
                 args_exit_if_mode_already_set(args, prog_name);
                 args->mode = 'b';
+                args_exit_if_file_dont_exists(optarg);
                 args->to_compress_filename = optarg;
                 
                 if (optind >= argc || argv[optind][0] == '-') {
@@ -74,7 +85,6 @@ void args_parse_params(int argc,char *argv[], args_t *args){
                     args_print_usage(argv[0]);
                     exit(1);
                 }
-                
                 args->to_decompress_filename = argv[optind];
                 optind++; 
                 break;
@@ -97,6 +107,7 @@ void args_parse_params(int argc,char *argv[], args_t *args){
     }
 
     printf("Mode: %c\n", args->mode);
+    printf("Habilitar Monitor: %d\n", args->show_monitor);
     printf("Para comprimir: %s\n", args->to_compress_filename);
     printf("Para descomprimir: %s\n", args->to_decompress_filename);
 
