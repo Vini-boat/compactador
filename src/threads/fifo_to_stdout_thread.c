@@ -25,11 +25,13 @@ void* run_fifo_to_stdout_thread(void *fifo_to_stdout_thread_args){
     int i = 0;
     
     while(1){
+        
         fifo_pop(args->fifo_to_read,buffer);
         
         if(strcmp(buffer, FIFO_FINAL_TOKEN) == 0) break;
         
         printf("token %d: %s\n", i, buffer);
+
         i++;
     }
 

@@ -45,17 +45,6 @@ void* run_reader_thread(void *reader_thread_args){
 
     do {
         c = fgetc(file);
-        if (isalnum(c)){
-            // Palavra Muito grande
-            if(token_index == FIFO_MAX_WORD_LENGTH -1){
-                token[token_index] = '\0';
-                fifo_push(args->fifo_to_write, token);
-                token_index = 0;
-            }
-
-            token[token_index++] = (char)c;
-            continue;
-        }
 
         if (isspace(c) || ispunct(c) || c == EOF){
             if(token_index > 0){
@@ -70,6 +59,15 @@ void* run_reader_thread(void *reader_thread_args){
             token[token_index] = '\0';
             fifo_push(args->fifo_to_write, token);
             token_index = 0;
+        } else {
+            if(token_index == FIFO_MAX_WORD_LENGTH -1){
+                token[token_index] = '\0';
+                fifo_push(args->fifo_to_write, token);
+                token_index = 0;
+            }
+
+            token[token_index++] = (char)c;
+            continue;
         }
 
     } while (c != EOF);
