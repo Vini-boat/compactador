@@ -109,7 +109,7 @@ void args_parse_params(int argc,char *argv[], args_t *args){
     printf("Mode: %c\n", args->mode);
     printf("Habilitar Monitor: %d\n", args->show_monitor);
     printf("Para comprimir: %s\n", args->to_compress_filename);
-    printf("Para descomprimir: %s\n", args->to_decompress_filename);
+    printf("Para descomprimir: %s\n\n", args->to_decompress_filename);
 
 
 }

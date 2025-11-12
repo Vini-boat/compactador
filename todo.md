@@ -9,8 +9,16 @@
 - [X] argumentos do main
     - [X] definir opções
     - [X] processar elas
+    - [X] Validar a existência dos arquivos de input
+
+- [ ] compactador (processo)
+  - [ ] criar as 3 threads
+  - [ ] atualizar o status compartilhado 
+- [ ] descompactador (processo)
 - [ ] apresentação dos dados (Monitor)
     - ler dos stats compartilhados
+
+
 - [ ] algoritmo de tokenização (thread de leitura)
     - ter um tamanho máximo de bytes por token (uns 100)
     - ter a lista de terminadores (pontuação ou espaço)

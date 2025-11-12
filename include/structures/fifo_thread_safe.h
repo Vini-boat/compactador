@@ -5,12 +5,12 @@
 
 // TODO: revisar e ajustar esses valores
 #define FIFO_CAPACITY 100
-#define MAX_WORD_LENGTH 128
-
+#define FIFO_MAX_WORD_LENGTH 128
+#define FIFO_FINAL_TOKEN ""
 
 typedef struct {
 
-    char buffer[FIFO_CAPACITY][MAX_WORD_LENGTH];
+    char buffer[FIFO_CAPACITY][FIFO_MAX_WORD_LENGTH];
 
     int head;
     int tail;
