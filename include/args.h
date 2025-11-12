@@ -6,6 +6,7 @@
 
 typedef struct{
     char mode;
+    int show_monitor;
     char *to_compress_filename;
     char *to_decompress_filename;
 } args_t;

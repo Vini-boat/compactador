@@ -9,12 +9,13 @@
 //   SÓ POR ISSO QUE ELE RECLAMA NO INTELISENSE
 
 void args_print_usage(const char *prog_name){
-    fprintf(stderr, "Uso: %s [ -c <arquivo>] [ -d <arquivo> ][ -b <arquivo> <arquivo> ] [ -t <arquivo> ]\n", prog_name);
+    fprintf(stderr, "Uso: %s [-m] [ -c <arquivo>] [ -d <arquivo> ][ -b <arquivo> <arquivo> ] [ -t <arquivo> ]\n", prog_name);
     fprintf(stderr, "\nOpções:\n");
     fprintf(stderr, "  -c <arquivo>             Modo de compressão,     Arquivo para compactar.\n");
     fprintf(stderr, "  -d <arquivo>             Modo de descompressão,  Arquivo para descompactar.\n");
     fprintf(stderr, "  -b <arquivo> <arquivo>   Modo de benchmark,      Arquivos para compactar e novo nome de arquivo descompactado.\n");
     fprintf(stderr, "  -t <arquivo>             Modo de teste,          Arquivo de de teste.\n");
+    fprintf(stderr, "  -m                       Habilita o monitor.\n");
     fprintf(stderr, "  -h                       Mostra esta ajuda.\n");
 }
 
@@ -30,6 +31,7 @@ void args_parse_params(int argc,char *argv[], args_t *args){
     int opt;
     char *prog_name = argv[0];
     args->mode = ' ';
+    args->show_monitor = 0;
     args->to_compress_filename = NULL;
     args->to_decompress_filename = NULL;
 
@@ -38,7 +40,7 @@ void args_parse_params(int argc,char *argv[], args_t *args){
         exit(1);
     }
 
-    while((opt = getopt(argc,argv,"hc:d:b:t:")) != -1){
+    while((opt = getopt(argc,argv,"hc:d:b:t:m")) != -1){
         switch(opt){
             case 'h':
                 args_print_usage(prog_name);
@@ -77,6 +79,9 @@ void args_parse_params(int argc,char *argv[], args_t *args){
                 optind++; 
                 break;
             
+            case 'm':
+                args->show_monitor = 1;
+                break;
             case '?':
             default:
                 args_print_usage(argv[0]);
