@@ -19,12 +19,9 @@
     - ler dos stats compartilhados
 
 
-- [ ] algoritmo de tokenização (thread de leitura)
-    - ter um tamanho máximo de bytes por token (uns 100)
-    - ter a lista de terminadores (pontuação ou espaço)
-    - copiar até a próxima pontuação ou espaço
-    - enviar o token da palavra
-    - enviar o token da pontuação ou espaço
+- [X] algoritmo de tokenização (thread de leitura)
+    - [X] Separar os espaços e pontuação
+    - [X] Aceitar acentos
 - [ ] algoritmo de compactação aprimorado
     - se o token é um token novo
         - armazena o token e define o byte dele
@@ -50,3 +47,11 @@
     - recebe o byte
     - converte o byte em token
     - envia o token para o gravador
+
+
+# Dificuldades:
+- Qual IPC usar para cada caso
+  - mutex
+  - shm
+  - pipe
+- Acentos na tokenização (são um byte separado)
