@@ -1,6 +1,8 @@
 - [X] fifo thread-safe
-- [ ] struct compartilhado (stats)
-    - mutex entre processos é diferente
+- [X] struct compartilhado (stats)
+    - [X] Implementação de memória compartilhada
+    - [X] Funções de escrita
+    - [X] Função de leitura
 - [ ] pipe entre processos
 - [X] main instânciar os 3 processos
 - [X] argumentos do main

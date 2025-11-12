@@ -12,6 +12,12 @@ echo "Iniciando build..."
 
 SOURCES=$(find "${SRC}" -type f -name "*.c")
 
+echo "Arquivos SRC encontrados (\$SOURCES):"
+for i in $SOURCES; do echo -e "\t${i}";done
+
+echo "Compilação:"
+echo -e "\t${COMPILER} ${FLAGS} \$SOURCES -o ${FINAL}"
+
 ${COMPILER} ${FLAGS} ${SOURCES} -o ${FINAL}
 
 echo "Build concluído em ./${FINAL}"

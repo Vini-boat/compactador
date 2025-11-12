@@ -67,4 +67,61 @@ void stats_shm_destroy(stats_shm_t *stats){
     }
 }
 
+// COMP
+
+void stats_shm_comp_update(stats_shm_t *stats, int read_tokens, int compressed_tokens, int tokens_not_in_dict){
+    pthread_mutex_lock(&stats->comp_stats.mutex);
+
+    stats->comp_stats.data.read_tokens_total += read_tokens;
+    stats->comp_stats.data.compressed_tokens_total += compressed_tokens;
+    stats->comp_stats.data.tokens_not_in_dict_total += tokens_not_in_dict;
+
+    pthread_mutex_unlock(&stats->comp_stats.mutex);
+}
+
+void stats_shm_comp_set_original_size_bytes(stats_shm_t *stats, long long size){
+    pthread_mutex_lock(&stats->comp_stats.mutex);
+    
+    stats->comp_stats.data.original_size_bytes = size;
+    
+    pthread_mutex_unlock(&stats->comp_stats.mutex);
+}
+
+// DECOMP
+
+void stats_shm_decomp_update(stats_shm_t *stats, int read_bytes, int decompressed_bytes, int bytes_not_in_dict){
+    pthread_mutex_lock(&stats->decomp_stats.mutex);
+    
+    stats->decomp_stats.data.read_bytes_total += read_bytes;
+    stats->decomp_stats.data.decompressed_bytes_total += decompressed_bytes;
+    stats->decomp_stats.data.bytes_not_in_dict_total += bytes_not_in_dict;
+    
+    pthread_mutex_unlock(&stats->decomp_stats.mutex);
+}
+
+void stats_shm_decomp_set_final_size_bytes(stats_shm_t *stats, long long size){
+    pthread_mutex_lock(&stats->decomp_stats.mutex);
+
+    stats->decomp_stats.data.final_size_bytes = size;
+
+    pthread_mutex_unlock(&stats->decomp_stats.mutex);
+}
+
+void stats_shm_get_snap(stats_shm_t *stats, stats_snap_t *snap_out){
+    pthread_mutex_lock(&stats->comp_stats.mutex);
+    snap_out->comp_data.read_tokens_total = stats->comp_stats.data.read_tokens_total;
+    snap_out->comp_data.compressed_tokens_total = stats->comp_stats.data.compressed_tokens_total;
+    snap_out->comp_data.tokens_not_in_dict_total = stats->comp_stats.data.tokens_not_in_dict_total;
+    snap_out->comp_data.original_size_bytes = stats->comp_stats.data.original_size_bytes;
+    pthread_mutex_unlock(&stats->comp_stats.mutex);
+    
+    pthread_mutex_lock(&stats->decomp_stats.mutex);
+    snap_out->decomp_data.read_bytes_total = stats->decomp_stats.data.read_bytes_total;
+    snap_out->decomp_data.decompressed_bytes_total = stats->decomp_stats.data.decompressed_bytes_total;
+    snap_out->decomp_data.bytes_not_in_dict_total = stats->decomp_stats.data.bytes_not_in_dict_total;
+    snap_out->decomp_data.final_size_bytes = stats->decomp_stats.data.final_size_bytes;
+    pthread_mutex_unlock(&stats->decomp_stats.mutex);
+
+}
+
 #endif
