@@ -28,6 +28,8 @@ void fifo_push(fifo_t *fifo, const char *buffer_in);
 
 void fifo_pop(fifo_t *fifo, char *buffer_out);
 
+void fifo_drain(fifo_t *fifo);
+
 void fifo_destroy(fifo_t *fifo);
 
 #endif

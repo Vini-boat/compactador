@@ -33,6 +33,7 @@ void run_test_mode(args_t *args){
         
         return;
     }
+    printf("after:\n");
     printf("reader_thread:\n");
     print_thread_info(&reader_thread, "\t");
     
@@ -47,17 +48,24 @@ void run_test_mode(args_t *args){
     }
     printf("writer_thread:\n");
     print_thread_info(&writer_thread, "\t");
-
+    
     pthread_join(reader_thread.id, &reader_thread.status);
     pthread_join(writer_thread.id, &writer_thread.status);
     
     if (reader_thread.status != NULL || writer_thread.status != NULL) {
         fprintf(stderr, "[ERROR] Uma das threads falhou durante a execução.\n");
     }
-
+    printf("after:\n");
+    printf("reader_thread:\n");
+    print_thread_info(&reader_thread, "\t");
+    printf("writer_thread:\n");
+    print_thread_info(&writer_thread, "\t");
+    
     writer_thread_args_destroy((writer_thread_args_t *) writer_thread.args);
     reader_thread_args_destroy((reader_thread_args_t *) reader_thread.args);
     
     fifo_destroy(&fifo_read_to_stdout);
+
+
 }
 #endif

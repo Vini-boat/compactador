@@ -53,4 +53,13 @@ void fifo_pop(fifo_t *fifo, char *buffer_out){
     pthread_mutex_unlock(&fifo->mutex);
 }
 
+void fifo_drain(fifo_t *fifo){
+    char buffer[FIFO_MAX_WORD_LENGTH];
+
+    while(1){
+        fifo_pop(fifo,buffer);
+        if(strcmp(buffer,FIFO_FINAL_TOKEN) == 0) break;
+    }
+}
+
 #endif

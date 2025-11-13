@@ -30,6 +30,11 @@ writer_thread_args_t* writer_thread_args_create(const char* filename, fifo_t* fi
 void* run_writer_thread(void *writer_thread_args){
     writer_thread_args_t *args = (writer_thread_args_t*) writer_thread_args;
     FILE *file = fopen(args->filename, "w");
+    if (file == NULL){
+        perror("[ERROR] Writer thread não conseguiu abrir o arquivo");
+        fifo_drain(args->fifo_to_read);
+        return (void *) -1;
+    }
 
     char buffer[FIFO_MAX_WORD_LENGTH];
 
