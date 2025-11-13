@@ -32,13 +32,7 @@ void* run_reader_thread(void *reader_thread_args){
     reader_thread_args_t *args = (reader_thread_args_t*) reader_thread_args;
 
     FILE *file = fopen(args->filename, "r");
-
-
-    // TODO: ajustar o algoritmo de tokenização
-    // while(fscanf(file, "%s", token) == 1){
-    //     fifo_push(args->fifo_to_write, token);
-    // }
-
+    
     char token[FIFO_MAX_WORD_LENGTH];
     int token_index = 0;
     int c;

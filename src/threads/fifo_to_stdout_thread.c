@@ -41,5 +41,4 @@ void* run_fifo_to_stdout_thread(void *fifo_to_stdout_thread_args){
 void fifo_to_stdout_thread_args_destroy(fifo_to_stdout_thread_args_t *args){
     free(args);
 }
-
 #endif
