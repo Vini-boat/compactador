@@ -3,9 +3,9 @@
     - [X] Implementação de memória compartilhada
     - [X] Funções de escrita
     - [X] Função de leitura
-- [.] pipe entre processos
+- [|] pipe entre processos
   - [X] primeiro ver se realmente tem que ser ao mesmo tempo
-    - não vai precisar
+    - não precisa fazer
 - [X] main instânciar os 3 processos
 - [X] argumentos do main
     - [X] definir opções
@@ -29,8 +29,13 @@
     - se o token é um token novo
         - armazena o token e define o byte dele
     - seleciona o byte do token
-    - envia o byte para o gravador (thread de gravação)
-    - grava o dicionário no arquivo compactado
+    - se em modo de benchmark
+        - envia a nova entrada o novo token para o descompactador 
+        - envia o byte para o descompactador
+    - se não 
+        - envia o byte para o gravador (thread de gravação)
+    - no final
+        - grava o dicionário no arquivo compactado
 - [ ] descompactador aprimorado
 - [ ] lendo arquivo
     - le o dicionário do arquivo
@@ -38,10 +43,18 @@
     - le o próximo byte
     - converte o byte em token usando o dicionário
     - envia para o gravador
+- [ ] recebendo do descompactador
+    - até receber o final do arquivo
+    - recebe a nova entrada do dicionário
+    - adiciona a entrada ao dicionário
+    - recebe o byte
+    - converte o byte em token
+    - envia o token para o gravador
 
 
 # Dificuldades:
 - Qual IPC usar para cada caso
   - mutex
   - shm
+  - pipe
 - Acentos na tokenização (são um byte separado)
