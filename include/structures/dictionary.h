@@ -2,7 +2,7 @@
 #define DICTIONARY_H
 #include "structures/fifo_thread_safe.h"
 #define DICT_MAX_TOKEN_LENGTH FIFO_MAX_WORD_LENGTH 
-#define DICT_INITIAL_SIZE 1024
+#define DICT_INITIAL_SIZE 256
 
 
 typedef struct {

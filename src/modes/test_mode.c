@@ -10,61 +10,109 @@
 #include "structures/fifo_thread_safe.h"
 
 #include "threads/reader_thread.h"
+#include "threads/compressor_thread.h"
 #include "threads/writer_thread.h"
 #include "threads/thread_info.h"
 
 void run_test_mode(args_t *args){
     thread_info_t reader_thread;
+    thread_info_t compressor_thread;
     thread_info_t writer_thread;
 
-    fifo_t fifo_read_to_stdout;
-    fifo_init(&fifo_read_to_stdout);
+    fifo_t fifo_read_to_compressor;
+    fifo_init(&fifo_read_to_compressor);
 
-    reader_thread.args = (void *) reader_thread_args_create(args->to_compress_filename, &fifo_read_to_stdout);
+    fifo_t fifo_compressor_to_writer;
+    fifo_init(&fifo_compressor_to_writer);
+
+    reader_thread.args = (void *) reader_thread_args_create(args->to_compress_filename, &fifo_read_to_compressor);
     
-    writer_thread.args = (void *) writer_thread_args_create(strcat(args->to_compress_filename,".cz"),&fifo_read_to_stdout);
+    compressor_thread.args = (void *) compressor_thread_args_create(&fifo_read_to_compressor,&fifo_compressor_to_writer);
+ 
+    writer_thread.args = (void *) writer_thread_args_create(strcat(args->to_compress_filename,".cz"),&fifo_compressor_to_writer);
 
     reader_thread.error = pthread_create(&reader_thread.id, NULL, run_reader_thread, reader_thread.args);
     if(reader_thread.error != 0) {
         fprintf(stderr, "[ERROR] Criando reader_thread %d\n",reader_thread.error);
+        
         reader_thread_args_destroy((reader_thread_args_t *) reader_thread.args);
+        compressor_thread_args_destroy((compressor_thread_args_t *) compressor_thread.args);
         writer_thread_args_destroy((writer_thread_args_t *) writer_thread.args);
-        fifo_destroy(&fifo_read_to_stdout);
+        
+        fifo_destroy(&fifo_read_to_compressor);
+        fifo_destroy(&fifo_compressor_to_writer);
         
         return;
     }
-    printf("after:\n");
+    printf("before:\n");
     printf("reader_thread:\n");
     print_thread_info(&reader_thread, "\t");
     
+
+    compressor_thread.error = pthread_create(&compressor_thread.id, NULL, run_compressor_thread,compressor_thread.args);    
+    if(compressor_thread.error != 0) {
+        fprintf(stderr, "[ERROR] Criando compressor_thread %d\n",compressor_thread.error);
+        
+        pthread_join(reader_thread.id, NULL);
+        
+        reader_thread_args_destroy((reader_thread_args_t *) reader_thread.args);
+        compressor_thread_args_destroy((compressor_thread_args_t *) compressor_thread.args);
+        writer_thread_args_destroy((writer_thread_args_t *) writer_thread.args);
+        
+        fifo_destroy(&fifo_read_to_compressor);
+        fifo_destroy(&fifo_compressor_to_writer);
+        
+        return;
+    }
+    printf("compressor_thread:\n");
+    print_thread_info(&compressor_thread, "\t");
+
+
+
+
     writer_thread.error = pthread_create(&writer_thread.id, NULL, run_writer_thread,writer_thread.args);    
     if(writer_thread.error != 0) {
         fprintf(stderr, "[ERROR] Criando writer_thread %d\n",writer_thread.error);
+        
         pthread_join(reader_thread.id, NULL);
-        reader_thread_args_destroy(reader_thread.args);
+        pthread_join(compressor_thread.id, NULL);
+        
+        reader_thread_args_destroy((reader_thread_args_t *) reader_thread.args);
+        compressor_thread_args_destroy((compressor_thread_args_t *) compressor_thread.args);
         writer_thread_args_destroy((writer_thread_args_t *) writer_thread.args);
-        fifo_destroy(&fifo_read_to_stdout);
+        
+        fifo_destroy(&fifo_read_to_compressor);
+        fifo_destroy(&fifo_compressor_to_writer);
         return;
     }
     printf("writer_thread:\n");
     print_thread_info(&writer_thread, "\t");
     
+
+
+
     pthread_join(reader_thread.id, &reader_thread.status);
+    pthread_join(compressor_thread.id, &compressor_thread.status);
     pthread_join(writer_thread.id, &writer_thread.status);
+
     
-    if (reader_thread.status != NULL || writer_thread.status != NULL) {
+    if (reader_thread.status != NULL || compressor_thread.status != NULL || writer_thread.status != NULL) {
         fprintf(stderr, "[ERROR] Uma das threads falhou durante a execução.\n");
     }
     printf("after:\n");
     printf("reader_thread:\n");
     print_thread_info(&reader_thread, "\t");
+    printf("compressor_thread:\n");
+    print_thread_info(&reader_thread, "\t");
     printf("writer_thread:\n");
     print_thread_info(&writer_thread, "\t");
     
     writer_thread_args_destroy((writer_thread_args_t *) writer_thread.args);
+    compressor_thread_args_destroy((compressor_thread_args_t *) compressor_thread.args);
     reader_thread_args_destroy((reader_thread_args_t *) reader_thread.args);
     
-    fifo_destroy(&fifo_read_to_stdout);
+    fifo_destroy(&fifo_read_to_compressor);
+    fifo_destroy(&fifo_compressor_to_writer);
 
 
 }
