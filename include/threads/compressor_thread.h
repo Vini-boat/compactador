@@ -1,5 +1,5 @@
-#ifndef COMPRESSOR_PROC_H
-#define COMPRESSOR_PROC_H
+#ifndef COMPRESSOR_THREAD_H
+#define COMPRESSOR_THREAD_H
 #include "structures/fifo_thread_safe.h"
 
 typedef struct {

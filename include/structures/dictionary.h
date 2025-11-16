@@ -19,6 +19,8 @@ typedef struct {
 
 dict_t* dict_create();
 
+void dict_add_default_values(dict_t *dict);
+
 void dict_add_item(dict_t *dict, char code, char *token);
 
 int dict_get_code(dict_t *dict, char *token, char *code_out);
