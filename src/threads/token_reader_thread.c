@@ -1,6 +1,6 @@
-#ifndef READER_THREAD_C
-#define READER_THREAD_C
-#include "threads/reader_thread.h"
+#ifndef TOKEN_READER_THREAD_C
+#define TOKEN_READER_THREAD_C
+#include "threads/token_reader_thread.h"
 #include "structures/fifo_thread_safe.h"
 
 #include <stdio.h>
@@ -8,16 +8,16 @@
 #include <string.h>
 #include <ctype.h>
 
-reader_thread_args_t* reader_thread_args_create(const char* filename, fifo_t* fifo_to_write){
-    reader_thread_args_t *args = (reader_thread_args_t*) malloc(sizeof(reader_thread_args_t));
+token_reader_thread_args_t* token_reader_thread_args_create(const char* filename, fifo_t* fifo_to_write){
+    token_reader_thread_args_t *args = (token_reader_thread_args_t*) malloc(sizeof(token_reader_thread_args_t));
     if (args == NULL){
-        perror("[ERROR] malloc em reader_thread_args_create");
+        perror("[ERROR] malloc em token_reader_thread_args_create");
         return NULL;
     }
 
     args->filename = strdup(filename); 
     if (args->filename == NULL) {
-        perror("[ERROR] strdup em reader_thread_args_create");
+        perror("[ERROR] strdup em token_reader_thread_args_create");
         free(args);
         return NULL;
     }
@@ -28,8 +28,8 @@ reader_thread_args_t* reader_thread_args_create(const char* filename, fifo_t* fi
     return args;
 }
 
-void* run_reader_thread(void *reader_thread_args){
-    reader_thread_args_t *args = (reader_thread_args_t*) reader_thread_args;
+void* run_token_reader_thread(void *token_reader_thread_args){
+    token_reader_thread_args_t *args = (token_reader_thread_args_t*) token_reader_thread_args;
 
     FILE *file = fopen(args->filename, "r");
     
@@ -72,7 +72,7 @@ void* run_reader_thread(void *reader_thread_args){
     return NULL;
 }
 
-void reader_thread_args_destroy(reader_thread_args_t *args){
+void token_reader_thread_args_destroy(token_reader_thread_args_t *args){
     free(args->filename);
     free(args);
 }

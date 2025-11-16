@@ -9,7 +9,7 @@
 fifo_to_stdout_thread_args_t* fifo_to_stdout_thread_args_create(fifo_t* fifo_to_read){
     fifo_to_stdout_thread_args_t *args = (fifo_to_stdout_thread_args_t*) malloc(sizeof(fifo_to_stdout_thread_args_t));
     if (args == NULL){
-        perror("[ERROR] malloc em reader_thread_args_create");
+        perror("[ERROR] malloc em token_reader_thread_args_create");
         return NULL;
     }
 
