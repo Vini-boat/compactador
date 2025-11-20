@@ -33,10 +33,15 @@ void run_decompressor_proc(args_t *args, stats_shm_t *stats){
     fifo_init(&fifo_decompressor_to_writer);
 
     code_reader_thread.args = (void *) code_reader_thread_args_create(args->to_decompress_filename, &fifo_read_to_decompressor);
-    
+
     decompressor_thread.args = (void *) decompressor_thread_args_create(&fifo_read_to_decompressor,&fifo_decompressor_to_writer);
-    //remove a extenção .cz
-    args->to_decompress_filename[strlen(args->to_decompress_filename) - 3] = '\0';
+
+    //remove a extenção 
+    args->to_decompress_filename[strlen(args->to_decompress_filename) - strlen(".cz")] = '\0';  
+    if(args->mode == 'b'){
+        args->to_decompress_filename[strlen(args->to_decompress_filename) - strlen(".txt")] = '\0';
+        strcat(args->to_decompress_filename,"-b.txt");  
+    }
     writer_thread.args = (void *) writer_thread_args_create(args->to_decompress_filename,&fifo_decompressor_to_writer);
 
     code_reader_thread.error = pthread_create(&code_reader_thread.id, NULL, run_code_reader_thread, code_reader_thread.args);

@@ -9,14 +9,14 @@
 //   SÓ POR ISSO QUE ELE RECLAMA NO INTELISENSE
 
 void args_print_usage(const char *prog_name){
-    fprintf(stderr, "Uso: %s [-m] [ -c <arquivo>] [ -d <arquivo> ][ -b <arquivo> <arquivo> ] [ -t <arquivo> ]\n", prog_name);
+    fprintf(stderr, "Uso: %s [-m] [ -c <arquivo>] [ -d <arquivo> ][ -b <arquivo> ] [ -t <arquivo> ]\n", prog_name);
     fprintf(stderr, "\nOpções:\n");
-    fprintf(stderr, "  -c <arquivo>             Modo de compressão,     Arquivo para compactar.\n");
-    fprintf(stderr, "  -d <arquivo>             Modo de descompressão,  Arquivo para descompactar.\n");
-    fprintf(stderr, "  -b <arquivo> <arquivo>   Modo de benchmark,      Arquivos para compactar e novo nome de arquivo descompactado.\n");
-    fprintf(stderr, "  -t <arquivo>             Modo de teste,          Arquivo de de teste.\n");
-    fprintf(stderr, "  -m                       Habilita o monitor.\n");
-    fprintf(stderr, "  -h                       Mostra esta ajuda.\n");
+    fprintf(stderr, "  -c <arquivo>     Modo de compressão,     Arquivo para compactar.\n");
+    fprintf(stderr, "  -d <arquivo>     Modo de descompressão,  Arquivo para descompactar.\n");
+    fprintf(stderr, "  -b <arquivo>     Modo de benchmark,      Arquivo para compactar e depois descompactar\n");
+    fprintf(stderr, "  -t <arquivo>     Modo de teste,          Arquivo de de teste.\n");
+    fprintf(stderr, "  -m               Habilita o monitor.\n");
+    fprintf(stderr, "  -h               Mostra esta ajuda.\n");
 }
 
 void args_exit_if_mode_already_set(args_t *args, const char *prog_name){
@@ -79,14 +79,6 @@ void args_parse_params(int argc,char *argv[], args_t *args){
                 args->mode = 'b';
                 args_exit_if_file_dont_exists(optarg);
                 args->to_compress_filename = optarg;
-                
-                if (optind >= argc || argv[optind][0] == '-') {
-                    fprintf(stderr, "Erro: A flag -b requer DOIS argumentos.\n");
-                    args_print_usage(argv[0]);
-                    exit(1);
-                }
-                args->to_decompress_filename = argv[optind];
-                optind++; 
                 break;
             
             case 'm':
