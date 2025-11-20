@@ -85,8 +85,8 @@ void run_compressor_proc(args_t *args, stats_shm_t *stats){
         if (compressor_thread.args) compressor_thread_args_destroy((compressor_thread_args_t *) compressor_thread.args);
         if (writer_thread.args) writer_thread_args_destroy((writer_thread_args_t *) writer_thread.args);
         
-        fifo_destroy(&fifo_compressor_to_writer);
         fifo_destroy(&fifo_read_to_compressor);
+        fifo_destroy(&fifo_compressor_to_writer);
 }
 
 #endif

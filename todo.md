@@ -45,3 +45,5 @@
   - mutex
   - shm
 - Acentos na tokenização (são um byte separado)
+- Não usar o cariage return (0xC)
+  - ele era inserido automaticamente
