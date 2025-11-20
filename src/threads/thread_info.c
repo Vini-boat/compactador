@@ -4,6 +4,11 @@
 #include <pthread.h>
 #include <stdio.h>
 
+void thread_info_init(thread_info_t *info){
+    info->error = -1;
+    info->args = NULL;
+}
+
 void print_thread_info(thread_info_t *info, char *prefix){
     printf("%s",prefix);
     printf("id     : %lu\n",info->id);
