@@ -52,7 +52,7 @@ stats_shm_t* stats_shm_create(){
     }
 
     pthread_mutexattr_destroy(&attr);
-    
+
     return stats;
 }
 
@@ -68,6 +68,12 @@ void stats_shm_destroy(stats_shm_t *stats){
 }
 
 // COMP
+
+void stats_shm_comp_set_finished(stats_shm_t *stats, int runnning_value){
+    pthread_mutex_lock(&stats->comp_stats.mutex);
+    stats->comp_stats.data.finished = runnning_value;
+    pthread_mutex_unlock(&stats->comp_stats.mutex);
+}
 
 void stats_shm_comp_update(stats_shm_t *stats, int read_tokens, int compressed_tokens, int tokens_not_in_dict){
     pthread_mutex_lock(&stats->comp_stats.mutex);
@@ -88,6 +94,12 @@ void stats_shm_comp_set_original_size_bytes(stats_shm_t *stats, long long size){
 }
 
 // DECOMP
+
+void stats_shm_decomp_set_finished(stats_shm_t *stats, int runnning_value){
+    pthread_mutex_lock(&stats->decomp_stats.mutex);
+    stats->decomp_stats.data.finished = runnning_value;
+    pthread_mutex_unlock(&stats->decomp_stats.mutex);
+}
 
 void stats_shm_decomp_update(stats_shm_t *stats, int read_bytes, int decompressed_bytes, int bytes_not_in_dict){
     pthread_mutex_lock(&stats->decomp_stats.mutex);

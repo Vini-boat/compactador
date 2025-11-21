@@ -8,6 +8,7 @@
 #include <string.h>
 
 typedef struct {
+    int finished;
     long read_tokens_total;
     long compressed_tokens_total;
     long tokens_not_in_dict_total;
@@ -20,6 +21,7 @@ typedef struct {
 } compressor_stats_t;
 
 typedef struct {
+    int finished;
     long read_bytes_total;
     long decompressed_bytes_total;
     long bytes_not_in_dict_total;
@@ -43,10 +45,14 @@ typedef struct {
 
 stats_shm_t* stats_shm_create();
 
+void stats_shm_comp_set_finished(stats_shm_t *stats, int runnning_value);
+
 void stats_shm_comp_update(stats_shm_t *stats, int read_tokens, int compressed_tokens, int tokens_not_in_dict);
 
 void stats_shm_comp_set_original_size_bytes(stats_shm_t *stats, long long size);
 
+
+void stats_shm_decomp_set_finished(stats_shm_t *stats, int runnning_value);
 
 void stats_shm_decomp_update(stats_shm_t *stats, int read_bytes, int decompressed_bytes, int bytes_not_in_dict);
 
