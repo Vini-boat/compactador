@@ -8,6 +8,7 @@
 
 #include "modes/compression_mode.h"
 #include "processes/compressor_proc.h"
+#include "processes/monitor_proc.h"
 
 #include "structures/stats_shm.h"
 
@@ -26,7 +27,7 @@ void run_compression_mode(args_t *args){
     if(args->show_monitor == 1){
         pid_monitor = fork();
         if(pid_monitor == 0){
-            //run monitor
+            run_monitor_proc(args,stats);
             exit(0);
         }
     }

@@ -10,15 +10,17 @@
 #include "structures/fifo_thread_safe.h"
 #include "structures/stats_shm.h"
 #include "processes/monitor_proc.h"
+#include "sys/stat.h"
 
 
 void run_test_mode(args_t *args){
     pid_t pid_monitor;
     
+    struct stat st;
     stats_shm_t *stats = stats_shm_create();
-    stats_shm_comp_set_finished(stats,0);
-    stats_shm_decomp_set_finished(stats,0);
-    
+    if(stat(args->to_compress_filename,&st) == 0){
+        stats_shm_comp_set_original_size_bytes(stats,(long long) st.st_size);
+    }
     pid_monitor = fork();
     if(pid_monitor == 0){
         run_monitor_proc(args,stats);

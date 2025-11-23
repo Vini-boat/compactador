@@ -10,6 +10,7 @@
 
 #include "processes/compressor_proc.h"
 #include "processes/decompressor_proc.h"
+#include "processes/monitor_proc.h"
 
 #include "structures/stats_shm.h"
 
@@ -24,7 +25,6 @@ void run_benchmark_mode(args_t *args){
     strcat(args->to_decompress_filename,".cz");
 
 
-
     pid_compressor = fork();
     if(pid_compressor == 0){
         run_compressor_proc(args,stats);
@@ -32,20 +32,23 @@ void run_benchmark_mode(args_t *args){
     }
     pid_monitor = fork();
     if(pid_monitor == 0){
-        //run monitor
+        run_monitor_proc(args,stats);
         exit(0);
     }
     int status;
     waitpid(pid_compressor,&status,0);
-    
-    pid_decompressor = fork();
-    if(pid_decompressor == 0){
-        run_decompressor_proc(args,stats);
-        exit(0);
+    if(args->show_monitor == 1){
+        pid_decompressor = fork();
+        if(pid_decompressor == 0){
+            run_decompressor_proc(args,stats);
+            exit(0);
+        }
     }
     
     waitpid(pid_decompressor,&status,0);
-    waitpid(pid_monitor,&status,0);
+    if(args->show_monitor == 1){
+        waitpid(pid_monitor,&status,0);
+    }
     stats_shm_destroy(stats);
 }
 

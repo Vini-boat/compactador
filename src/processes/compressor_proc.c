@@ -17,6 +17,7 @@
 #include "threads/token_reader_thread.h"
 #include "threads/compressor_thread.h"
 #include "threads/writer_thread.h"
+#include "sys/stat.h"
 
 void run_compressor_proc(args_t *args, stats_shm_t *stats){
     thread_info_t token_reader_thread;
@@ -32,9 +33,13 @@ void run_compressor_proc(args_t *args, stats_shm_t *stats){
     fifo_t fifo_compressor_to_writer;
     fifo_init(&fifo_compressor_to_writer);
 
+    struct stat st;
+    if(stat(args->to_compress_filename, &st) == 0){
+        stats_shm_comp_set_original_size_bytes(stats,(long long) st.st_size);
+    }
     token_reader_thread.args = (void *) token_reader_thread_args_create(args->to_compress_filename, &fifo_read_to_compressor);
     
-    compressor_thread.args = (void *) compressor_thread_args_create(&fifo_read_to_compressor,&fifo_compressor_to_writer);
+    compressor_thread.args = (void *) compressor_thread_args_create(stats,&fifo_read_to_compressor,&fifo_compressor_to_writer);
  
     writer_thread.args = (void *) writer_thread_args_create(strcat(args->to_compress_filename,".cz"),&fifo_compressor_to_writer);
 
@@ -60,6 +65,7 @@ void run_compressor_proc(args_t *args, stats_shm_t *stats){
     pthread_join(compressor_thread.id, &compressor_thread.status);
     pthread_join(writer_thread.id, &writer_thread.status);
 
+    stats_shm_comp_set_finished(stats,1);
     
     if (token_reader_thread.status != NULL || compressor_thread.status != NULL || writer_thread.status != NULL) {
         fprintf(stderr, "[ERROR] Uma das threads falhou durante a execução.\n");

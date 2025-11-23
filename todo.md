@@ -12,38 +12,44 @@
     - [X] processar elas
     - [X] Validar a existência dos arquivos de input
 
-- [ ] compactador (processo)
-  - [ ] criar as 3 threads
-  - [ ] atualizar o status compartilhado 
-- [ ] descompactador (processo)
-- [ ] apresentação dos dados (Monitor)
+- [X] compactador (processo)
+  - [X] criar as 3 threads
+  - [X] atualizar o status compartilhado 
+- [X] descompactador (processo)
+- [X] apresentação dos dados (Monitor)
     - ler dos stats compartilhados
 
 
 - [X] algoritmo de tokenização (thread de leitura)
     - [X] Separar os espaços e pontuação
     - [X] Aceitar acentos
-- [ ] algoritmo de compactação aprimorado
-    - [ ] quantidade do mesmo token
-      - o primeiro indice do dicionario é o byte que diz quantas vezes o token anterior vai se repetir
-    - se o token é um token novo
-        - armazena o token e define o byte dele
-    - seleciona o byte do token
-    - envia o byte para o gravador (thread de gravação)
-    - grava o dicionário no arquivo compactado
-- [ ] descompactador aprimorado
-- [ ] lendo arquivo
-    - le o dicionário do arquivo
-    - até o final do arquivo
-    - le o próximo byte
-    - converte o byte em token usando o dicionário
-    - envia para o gravador
 
+
+# Tópicos da Apresentação
+- Excalidraw
+  - Como os processos trocam informações.
+    - fifo
+    - shm
+  - Como as threads trabalham em conjunto para compactar.
+- Compilar
+- Executar
+  - benchmark entrada.txt
+  - benchmark entrada2.txt
+  - benchmark entrada5.txt
+    - mostrar arvore de processos  
+- Dicionário ampliado
+- Quais dificuldades técnicas foram enfrentadas e como foram resolvidas. 
 
 # Dificuldades:
 - Qual IPC usar para cada caso
   - mutex
-  - shm
+  - shared memory
+- Dicionário dinâmico não vale a pena para troca simples de token por byte
+  - no final o arquivo fica maior
 - Acentos na tokenização (são um byte separado)
 - Não usar o cariage return (0xC)
   - ele era inserido automaticamente
+
+
+
+

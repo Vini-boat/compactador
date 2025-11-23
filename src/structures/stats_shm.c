@@ -14,7 +14,7 @@
 #define SHM_OFFSET 0
 
 stats_shm_t* stats_shm_create(){
-    stats_shm_t *stats = mmap(NULL, sizeof(stats_shm_t), SHM_PROTECTION, SHM_FLAGS, SHM_FD, 0);
+    stats_shm_t *stats = mmap(NULL, sizeof(stats_shm_t), SHM_PROTECTION, SHM_FLAGS, SHM_FD, SHM_OFFSET);
     if(stats == MAP_FAILED){
         perror("[ERROR] Alocação de memória compartilhada falhou");
         return NULL;
@@ -121,17 +121,11 @@ void stats_shm_decomp_set_final_size_bytes(stats_shm_t *stats, long long size){
 
 void stats_shm_get_snap(stats_shm_t *stats, stats_snap_t *snap_out){
     pthread_mutex_lock(&stats->comp_stats.mutex);
-    snap_out->comp_data.read_tokens_total = stats->comp_stats.data.read_tokens_total;
-    snap_out->comp_data.compressed_tokens_total = stats->comp_stats.data.compressed_tokens_total;
-    snap_out->comp_data.tokens_not_in_dict_total = stats->comp_stats.data.tokens_not_in_dict_total;
-    snap_out->comp_data.original_size_bytes = stats->comp_stats.data.original_size_bytes;
+    memcpy(&snap_out->comp_data, &stats->comp_stats.data, sizeof(compressor_stats_data_t));
     pthread_mutex_unlock(&stats->comp_stats.mutex);
     
     pthread_mutex_lock(&stats->decomp_stats.mutex);
-    snap_out->decomp_data.read_bytes_total = stats->decomp_stats.data.read_bytes_total;
-    snap_out->decomp_data.decompressed_bytes_total = stats->decomp_stats.data.decompressed_bytes_total;
-    snap_out->decomp_data.bytes_not_in_dict_total = stats->decomp_stats.data.bytes_not_in_dict_total;
-    snap_out->decomp_data.final_size_bytes = stats->decomp_stats.data.final_size_bytes;
+    memcpy(&snap_out->decomp_data, &stats->decomp_stats.data, sizeof(decompressor_stats_data_t));
     pthread_mutex_unlock(&stats->decomp_stats.mutex);
 
 }

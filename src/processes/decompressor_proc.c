@@ -18,6 +18,8 @@
 #include "threads/decompressor_thread.h"
 #include "threads/writer_thread.h"
 
+#include "sys/stat.h"
+
 void run_decompressor_proc(args_t *args, stats_shm_t *stats){
     thread_info_t code_reader_thread;
     thread_info_init(&code_reader_thread);
@@ -34,7 +36,7 @@ void run_decompressor_proc(args_t *args, stats_shm_t *stats){
 
     code_reader_thread.args = (void *) code_reader_thread_args_create(args->to_decompress_filename, &fifo_read_to_decompressor);
 
-    decompressor_thread.args = (void *) decompressor_thread_args_create(&fifo_read_to_decompressor,&fifo_decompressor_to_writer);
+    decompressor_thread.args = (void *) decompressor_thread_args_create(stats,&fifo_read_to_decompressor,&fifo_decompressor_to_writer);
 
     //remove a extenção 
     args->to_decompress_filename[strlen(args->to_decompress_filename) - strlen(".cz")] = '\0';  
@@ -66,6 +68,12 @@ void run_decompressor_proc(args_t *args, stats_shm_t *stats){
     pthread_join(decompressor_thread.id, &decompressor_thread.status);
     pthread_join(writer_thread.id, &writer_thread.status);
 
+    struct stat st;
+    if(stat(args->to_decompress_filename,&st) == 0){
+        stats_shm_decomp_set_final_size_bytes(stats,(long long) st.st_size);
+    }
+
+    stats_shm_decomp_set_finished(stats,1);
     
     if (code_reader_thread.status != NULL || decompressor_thread.status != NULL || writer_thread.status != NULL) {
         fprintf(stderr, "[ERROR] Uma das threads falhou durante a execução.\n");
